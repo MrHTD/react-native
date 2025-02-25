@@ -70,16 +70,6 @@ pipeline {
                 }
             }
         }
-        stage("Start Metro Bundler") {
-            steps {
-                sshagent(['ssh']) {
-                    echo "Starting Metro Bundler..."
-                    sh """
-                        ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} "cd /home/ahmed/development/${REPO_NAME} && nohup yarn start > metro.log 2>&1 &"
-                    """
-                }
-            }
-        }
         stage("Build and Run Android App") {
             steps {
                 sshagent(['ssh']) {
