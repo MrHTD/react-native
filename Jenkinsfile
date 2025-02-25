@@ -74,7 +74,7 @@ pipeline {
             steps {
                 sshagent(['ssh']) {
                     sh """
-                        cd /home/jenkins/development/${APP_NAME}/android
+                        cd /home/ahmed/development/${APP_NAME}/android
                         chmod +x gradlew
                         ./gradlew assembleRelease
                     """
@@ -85,7 +85,7 @@ pipeline {
             steps {
                 sshagent(['ssh']) {
                     script {
-                        def apkPath = "/home/jenkins/development/${APP_NAME}/android/app/build/outputs/apk/release/app-release.apk"
+                        def apkPath = "/home/ahmed/development/${APP_NAME}/android/app/build/outputs/apk/release/app-release.apk"
                         if (fileExists(apkPath)) {
                             sh """
                                 curl -F "file=@${apkPath}" ${DISCORD_WEBHOOK}
