@@ -3,7 +3,7 @@ pipeline {
     environment {
         APP_NAME = "react-native"
         REPO_NAME = "react-native"
-        REPO_URL = "git@github.com:ahmed/mawrid-vendor.git"
+        REPO_URL = "git@github.com:MrHTD/react-native.git"
         DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1328627802194444359/wKmS_3V7cbHvBZzQu8B2JB1A1Hqc9Q0-vj0mIQLqD5ZH_bQCXg5aj0LLdBEqQq4dGem5"
         ANDROID_BUILD_PATH = "/home/ahmed/development/${REPO_NAME}/android/app/build/outputs/apk/release/app-release.apk"
     }
@@ -12,7 +12,7 @@ pipeline {
             steps {
                 sshagent(['ssh']) {
                     echo "Pulling latest code from Git repository..."
-sh """
+                    sh """
                                     ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
                                     set -x
             
