@@ -65,34 +65,48 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
                         set -x
                         cd /home/ahmed/development/${REPO_NAME}
-                        yarn install --frozen-lockfile
+                        yarn install
                     """
                 }
             }
         }
-        stage("Build and Run Android App") {
+        stage("Build APK") {
             steps {
                 sshagent(['ssh']) {
-                    echo "Building and Running Android App..."
                     sh """
-                        ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
-                        set -x
-                        cd /home/ahmed/development/${REPO_NAME}
-                        yarn android
+                        cd /home/jenkins/development/${APP_NAME}/android
+                        chmod +x gradlew
+                        ./gradlew assembleRelease
                     """
                 }
             }
         }
-        stage("Send APK to Discord") {
+        stage("Upload APK to Discord") {
             steps {
                 sshagent(['ssh']) {
-                    echo "Uploading APK to Discord..."
-                    sh """
-                        ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} "curl -F \\"payload_json={\\\\\\"content\\\\\\": \\\\\\"📱 New APK Build for ${APP_NAME}! \\\\\\"}\\" -F \\"file=@${ANDROID_BUILD_PATH}\\" ${DISCORD_WEBHOOK}"
-                    """
+                    script {
+                        def apkPath = "/home/jenkins/development/${APP_NAME}/android/app/build/outputs/apk/release/app-release.apk"
+                        if (fileExists(apkPath)) {
+                            sh """
+                                curl -F "file=@${apkPath}" ${DISCORD_WEBHOOK}
+                            """
+                        } else {
+                            error "APK file not found!"
+                        }
+                    }
                 }
             }
         }
+        // stage("Send APK to Discord") {
+        //     steps {
+        //         sshagent(['ssh']) {
+        //             echo "Uploading APK to Discord..."
+        //             sh """
+        //                 ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} "curl -F \\"payload_json={\\\\\\"content\\\\\\": \\\\\\"📱 New APK Build for ${APP_NAME}! \\\\\\"}\\" -F \\"file=@${ANDROID_BUILD_PATH}\\" ${DISCORD_WEBHOOK}"
+        //             """
+        //         }
+        //     }
+        // }
     }
     post {
         success {
