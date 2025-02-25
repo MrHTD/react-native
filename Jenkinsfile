@@ -76,7 +76,10 @@ pipeline {
                     sh """
                         ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
                         cd /home/ahmed/development/${APP_NAME}/android
-                        chmod +x gradlew
+                        ./gradlew clean
+
+                        ./gradlew build
+                        
                         ./gradlew assembleRelease
                     """
                 }
