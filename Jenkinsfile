@@ -100,7 +100,7 @@ pipeline {
             steps {
                 script {
                     // def apk_url = ""
-                    def message = "APK Uploaded Successfully! 🎉\n\n📥 **Download APK:** [Click Here](http://${env.SSH_HOST}/${APK_NAME})"
+                    def message = "APK Uploaded Successfully! 🎉\n\n📥 **Download ${APK_NAME} APK:** [Click Here](http://${env.SSH_HOST}/${APK_NAME})"
         
                     discordSend(
                         description: message,
@@ -110,7 +110,7 @@ pipeline {
                         webhookURL: env.DISCORD_WEBHOOK
                     )
         
-                    // echo "Message sent to Discord: ${message}"
+                    echo "Message sent to Discord: ${message}"
                 }
             }
         }
