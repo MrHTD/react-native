@@ -3,7 +3,6 @@ pipeline {
     environment {
         APP_NAME = "react-native"
         REPO_NAME = "react-native"
-        REPO_URL = "git@github.com:MrHTD/react-native.git"
         DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1328627802194444359/wKmS_3V7cbHvBZzQu8B2JB1A1Hqc9Q0-vj0mIQLqD5ZH_bQCXg5aj0LLdBEqQq4dGem5"
         APK_PATH = "/home/ahmed/development/${REPO_NAME}/android/app/build/outputs/apk/release/app-release.apk"
         APK_NAME = "app-release.apk"
@@ -13,6 +12,8 @@ pipeline {
             steps {
                 sh """
                     echo ${env.GIT_URL};
+                    echo "Repository URL: ${env.REPO_URL}"
+                    echo "Repository Name: ${env.REPO_NAME}"
                 """
             }
         }
@@ -40,7 +41,7 @@ pipeline {
                                     # Check if the repository folder exists inside development
                                     if [ ! -d '${REPO_NAME}' ]; then
                                         echo 'Repository folder does not exist. Cloning repository...';
-                                        git clone ${REPO_URL} ${REPO_NAME};
+                                        git clone ${env.GIT_URL} ${REPO_NAME};
                                         cd ${REPO_NAME};
                                         git switch ${env.BRANCH_NAME};
                                     else
@@ -51,7 +52,7 @@ pipeline {
                                         if [ ! -d '.git' ]; then
                                             echo 'Not a Git repository. Initializing repository...';
                                             git init;
-                                            git remote add origin ${REPO_URL};
+                                            git remote add origin ${env.GIT_URL};
                                             git fetch origin;
                                             git switch ${env.BRANCH_NAME};
                                         else
