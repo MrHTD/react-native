@@ -2,7 +2,6 @@ pipeline {
     agent any
     environment {
         APP_NAME = "react-native"
-        REPO_NAME = "react-native"
         DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1328627802194444359/wKmS_3V7cbHvBZzQu8B2JB1A1Hqc9Q0-vj0mIQLqD5ZH_bQCXg5aj0LLdBEqQq4dGem5"
         APK_PATH = "/home/ahmed/development/${REPO_NAME}/android/app/build/outputs/apk/release/app-release.apk"
         APK_NAME = "app-release.apk"
@@ -12,7 +11,6 @@ pipeline {
             steps {
                 sh """
                     echo ${env.GIT_URL};
-                    echo "Repository URL: ${env.REPO_URL}"
                     echo "Repository Name: ${env.REPO_NAME}"
                 """
             }
