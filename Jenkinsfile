@@ -71,43 +71,43 @@ pipeline {
                 }
             }
         }
-        stage("Build App") {
-            steps {
-                sshagent(['ssh']) {
-                    sh """
-                        ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
-                        cd /home/ahmed/development/${APP_NAME}/android
-                        ./gradlew clean
+        // stage("Build App") {
+        //     steps {
+        //         sshagent(['ssh']) {
+        //             sh """
+        //                 ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
+        //                 cd /home/ahmed/development/${APP_NAME}/android
+        //                 ./gradlew clean
 
-                        ./gradlew build
-                    """
-                }
-            }
-        }
-        stage("Build APK") {
-            steps {
-                sshagent(['ssh']) {
-                    echo "Building APK..."
-                    sh """
-                        ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
-                        cd /home/ahmed/development/${APP_NAME}/android
-                        ./gradlew assembleRelease
-                    """
-                }
-            }
-        }
+        //                 ./gradlew build
+        //             """
+        //         }
+        //     }
+        // }
+        // stage("Build APK") {
+        //     steps {
+        //         sshagent(['ssh']) {
+        //             echo "Building APK..."
+        //             sh """
+        //                 ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
+        //                 cd /home/ahmed/development/${APP_NAME}/android
+        //                 ./gradlew assembleRelease
+        //             """
+        //         }
+        //     }
+        // }
         stage("Display Download Link") {
             steps {
                 script {
                     def apk_url = "http://${env.SSH_HOST}/${APK_NAME}"
-                    def message = "APK Uploaded Successfully! 🎉\nDownload APK: ${apk_url}"
+                    def message = "APK Uploaded Successfully! 🎉\\nDownload APK: ${apk_url}"
+                    def discord_webhook_url = "${DISCORD_WEBHOOK}"
         
-                    // Send message to Discord using curl
                     sh """
                         curl -H "Content-Type: application/json" \
                              -X POST \
-                             -d '{ "content": "${message}" }' \
-                             ${DISCORD_WEBHOOK}
+                             -d '{ "content": "${message.replace('"', '\\"')}" }' \
+                             ${discord_webhook_url}
                     """
         
                     echo "Message sent to Discord: ${message}"
