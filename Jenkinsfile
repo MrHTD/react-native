@@ -99,8 +99,18 @@ pipeline {
         stage("Display Download Link") {
             steps {
                 script {
-                    echo "APK Uploaded Successfully!"
-                    echo "Download APK: http://${env.SSH_HOST}/${APK_NAME}"
+                    def apk_url = "http://${env.SSH_HOST}/${APK_NAME}"
+                    def message = "APK Uploaded Successfully! 🎉\nDownload APK: ${apk_url}"
+        
+                    // Send message to Discord using curl
+                    sh """
+                        curl -H "Content-Type: application/json" \
+                             -X POST \
+                             -d '{ "content": "${message}" }' \
+                             ${DISCORD_WEBHOOK}
+                    """
+        
+                    echo "Message sent to Discord: ${message}"
                 }
             }
         }
