@@ -6,6 +6,7 @@ pipeline {
         REPO_URL = "git@github.com:MrHTD/react-native.git"
         DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1328627802194444359/wKmS_3V7cbHvBZzQu8B2JB1A1Hqc9Q0-vj0mIQLqD5ZH_bQCXg5aj0LLdBEqQq4dGem5"
         APK_PATH = "/home/ahmed/development/${REPO_NAME}/android/app/build/outputs/apk/release/app-release.apk"
+        APK_NAME = "app-release.apk"
     }
     stages {
         stage("Git Pull or Clone") {
@@ -95,28 +96,26 @@ pipeline {
                 }
             }
         }
-        stage("Upload APK to Discord") {
+        stage("Display Download Link") {
             steps {
-                sshagent(['ssh']) {
-                    sh """
-                        ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
-                        
-                        if [ -f "${APK_PATH}" ]; then
-                            curl -F "file=@${APK_PATH}" ${DISCORD_WEBHOOK}
-                        else
-                            echo "APK file not found!"
-                            exit 1
-                        fi
-                    """
+                script {
+                    echo "APK Uploaded Successfully!"
+                    echo "Download APK: http://${env.SSH_HOST}/${APK_NAME}"
                 }
             }
         }
-        // stage("Send APK to Discord") {
+        // stage("Upload APK to Discord") {
         //     steps {
         //         sshagent(['ssh']) {
-        //             echo "Uploading APK to Discord..."
         //             sh """
-        //                 ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} "curl -F \\"payload_json={\\\\\\"content\\\\\\": \\\\\\"📱 New APK Build for ${APP_NAME}! \\\\\\"}\\" -F \\"file=@${ANDROID_BUILD_PATH}\\" ${DISCORD_WEBHOOK}"
+        //                 ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
+                        
+        //                 if [ -f "${APK_PATH}" ]; then
+        //                     curl -F "file=@${APK_PATH}" ${DISCORD_WEBHOOK}
+        //                 else
+        //                     echo "APK file not found!"
+        //                     exit 1
+        //                 fi
         //             """
         //         }
         //     }
