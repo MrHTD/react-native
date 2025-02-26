@@ -9,6 +9,13 @@ pipeline {
         APK_NAME = "app-release.apk"
     }
     stages {
+        stage('Checking') {
+            steps {
+                sh """
+                    echo ${env.GIT_URL};
+                """
+            }
+        }
         stage("Git Pull or Clone") {
             steps {
                 sshagent(['ssh']) {
