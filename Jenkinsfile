@@ -96,19 +96,19 @@ pipeline {
         //         }
         //     }
         // }
-        stage("Display Download Link") {
+        stage("Notify Discord") {
             steps {
                 script {
                     def apk_url = "http://${env.SSH_HOST}/${APK_NAME}"
-                    def message = "APK Uploaded Successfully! 🎉\\nDownload APK: ${apk_url}"
-                    def discord_webhook_url = "${DISCORD_WEBHOOK}"
+                    def message = "APK Uploaded Successfully! 🎉\n\n📥 **Download APK:** [Click Here](${apk_url})"
         
-                    sh """
-                        curl -H "Content-Type: application/json" \
-                             -X POST \
-                             -d '{ "content": "${message.replace('"', '\\"')}" }' \
-                             ${discord_webhook_url}
-                    """
+                    discordSend(
+                        description: message,
+                        footer: "Jenkins Pipeline Notification",
+                        result: "SUCCESS",
+                        title: "APK Build Notification",
+                        webhookURL: env.DISCORD_WEBHOOK
+                    )
         
                     echo "Message sent to Discord: ${message}"
                 }
