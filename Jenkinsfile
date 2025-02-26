@@ -5,8 +5,7 @@ pipeline {
         REPO_NAME = "react-native"
         REPO_URL = "git@github.com:MrHTD/react-native.git"
         DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1328627802194444359/wKmS_3V7cbHvBZzQu8B2JB1A1Hqc9Q0-vj0mIQLqD5ZH_bQCXg5aj0LLdBEqQq4dGem5"
-        ANDROID_BUILD_PATH = "/home/ahmed/development/${REPO_NAME}/android/app/build/outputs/apk/release/app-release.apk"
-        ANDROID_HOME = "/home/ahmed/Android/Sdk"
+        APK_PATH = "/home/ahmed/development/${REPO_NAME}/android/app/build/outputs/apk/release/app-release.apk"
     }
     stages {
         stage("Git Pull or Clone") {
@@ -89,16 +88,16 @@ pipeline {
         stage("Upload APK to Discord") {
             steps {
                 sshagent(['ssh']) {
-                    script {
-                        def apkPath = "/home/ahmed/development/${APP_NAME}/android/app/build/outputs/apk/release/app-release.apk"
-                        if (fileExists(apkPath)) {
-                            sh """
-                                curl -F "file=@${apkPath}" ${DISCORD_WEBHOOK}
-                            """
-                        } else {
-                            error "APK file not found!"
-                        }
-                    }
+                    sh """
+                        ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
+                        
+                        if [ -f "${APK_PATH}" ]; then
+                            curl -F "file=@${APK_PATH}" ${DISCORD_WEBHOOK}
+                        else
+                            echo "APK file not found!"
+                            exit 1
+                        fi
+                    """
                 }
             }
         }
