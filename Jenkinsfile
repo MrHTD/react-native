@@ -70,7 +70,7 @@ pipeline {
                 }
             }
         }
-        stage("Build APK") {
+        stage("Build App") {
             steps {
                 sshagent(['ssh']) {
                     sh """
@@ -79,7 +79,16 @@ pipeline {
                         ./gradlew clean
 
                         ./gradlew build
-                        
+                    """
+                }
+            }
+        }
+        stage("Build APK") {
+            steps {
+                sshagent(['ssh']) {
+                    sh """
+                        ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
+                        cd /home/ahmed/development/${APP_NAME}/android
                         ./gradlew assembleRelease
                     """
                 }
