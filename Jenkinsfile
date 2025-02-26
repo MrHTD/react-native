@@ -86,6 +86,7 @@ pipeline {
         stage("Build APK") {
             steps {
                 sshagent(['ssh']) {
+                    echo "Building APK..."
                     sh """
                         ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
                         cd /home/ahmed/development/${APP_NAME}/android
