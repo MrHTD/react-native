@@ -115,8 +115,17 @@ pipeline {
             steps {
                 script {
                     def apkURL = "http://${env.SSH_HOST}/apk/${APP_NAME}.apk"
-                    def message = """APK Uploaded Successfully! 🎉 \n\n 📱 **App:** "${APP_NAME}" \n\n 📅 **Date:** $(date +"%Y-%m-%d %H:%M:%S")  \n\n 🔗 **Download Now:** [📥 Click Here](${apkURL}) \n\n ✅ The latest APK is now available. Test it and share your feedback! 🚀.
-                    """
+def currentDate = new Date().format("yyyy-MM-dd HH:mm:ss", TimeZone.getTimeZone("UTC"))
+def message = """🎉 **APK Uploaded Successfully!**  
+
+📱 **App:** ${APP_NAME}  
+
+📅 **Date:** ${currentDate}  
+
+🔗 **Download Now:** [📥 Click Here](${apkURL})  
+
+✅ The latest APK is now available. Test it and share your feedback! 🚀
+"""
         
                     discordSend(
                         description: message,
