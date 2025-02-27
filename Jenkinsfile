@@ -103,7 +103,7 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
                         cd /home/ahmed/development/${APP_NAME}/android/app/build/outputs/apk/release/;
                         ls -l;
-                        sudo cp ./app-release.apk /home/ahmed/apk/${env.DATE}_$APP_NAME.apk;
+                        sudo cp ./app-release.apk /home/ahmed/apk/${env.DATE}_${APP_NAME}.apk;
                         ls -l;
                     """
                 }
