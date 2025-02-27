@@ -114,36 +114,19 @@ pipeline {
         stage('Download APK') {
             steps {
                 script {
-                    // def apkURL = "http://${env.SSH_HOST}/apk/${APP_NAME}.apk"
-                    // def currentDate = new Date().format("yyyy-MM-dd HH:mm:ss", TimeZone.getTimeZone("UTC"))
-                    // def message = """📱 **App:** ${APP_NAME} \n\n 📅 **Date:** ${currentDate} \n\n 🔗 **Download Now:** [📥 Click Here](${apkURL}) \n\n ✅ The latest APK is now available. """
-        
-                    // discordSend(
-                    //     description: message,
-                    //     footer: 'Jenkins Pipeline Notification',
-                    //     result: 'SUCCESS',
-                    //     title: "${APP_NAME} APK Ready!",
-                    //     webhookURL: env.DISCORD_WEBHOOK
-                    // )
-        
-                    // echo "Message sent to Discord: ${message}"
-
-                    def currentDate = new Date().format("EEEE, MMMM dd, yyyy - HH:mm:ss z", TimeZone.getTimeZone("UTC"))
                     def apkURL = "http://${env.SSH_HOST}/apk/${APP_NAME}.apk"
-                    
+                    def currentDate = new Date().format("yyyy-MM-dd HH:mm:ss", TimeZone.getTimeZone("UTC"))
+                    def message = """📱 **App:** ${APP_NAME} \n\n 📅 **Date:** ${currentDate} \n\n 🔗 **Download Now:** [📥 Click Here](${apkURL}) \n\n ✅ The latest APK is now available. """
+        
                     discordSend(
-                        title: "📦 ${APP_NAME} APK Build Successful! 🎉",
-                        description: """Your latest APK is now available for download.  
-                        Click the button below to get it! 🚀""",
-                        color: "#0099ff",  // Blue color for a modern look
-                        fields: [
-                            [name: "📅 Build Date", value: currentDate, inline: false],
-                            [name: "📥 Download APK", value: "[**Click Here to Download**](${apkURL})", inline: false]
-                        ],
-                        footer: "Jenkins Pipeline • Powered by DevOps",
-                        result: "SUCCESS",
+                        description: message,
+                        footer: 'Jenkins Pipeline Notification',
+                        result: 'SUCCESS',
+                        title: "APK Ready!",
                         webhookURL: env.DISCORD_WEBHOOK
                     )
+        
+                    echo "Message sent to Discord: ${message}"
                 }
             }
         }
