@@ -113,7 +113,7 @@ pipeline {
                     echo "Building APK..."
                     sh """
                         ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
-                        cd /home/ahmed/development/${APP_NAME}/android/app/build/outputs/apk/release/
+                        cd /home/ahmed/development/${APP_NAME}/android/app/build/outputs/apk/release
                         ls -l
                         sudo cp ./app-release.apk /home/ahmed/apk/$(date +"%Y-%m-%d")-$(basename ${APK_PATH});
                     """
