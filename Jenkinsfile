@@ -95,18 +95,30 @@ pipeline {
         //         }
         //     }
         // }
-        stage("Copying APK") {
+        // stage("Copying APK") {
+        //     steps {
+        //             sshagent(['ssh']) {
+        //                 echo "Building APK..."
+        //                 sh """
+        //                     ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
+        //                     cd /home/ahmed/development/${REPO_NAME}
+        //                     ls -l;
+        //                     sudo cp ./app-release.apk /home/ahmed/apk/$(date +"%Y-%m-%d")-$(basename ${APK_PATH});
+        //                 """
+        //             }
+        //     }
+        // }
+        stage("Build APK") {
             steps {
-                    sshagent(['ssh']) {
-                        echo "Building APK..."
-                        sh """
-                            ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
-                            cd /home/ahmed/development/${REPO_NAME}
-                            ls -l;
-                            sudo cp ./app-release.apk /home/ahmed/apk/$(date +"%Y-%m-%d")-$(basename ${APK_PATH});
-                        """
-                    }
+                sshagent(['ssh']) {
+                    echo "Building APK..."
+                    sh """
+                        ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
+                        cd /home/ahmed/development/${APP_NAME}/android
+                        ls -l
+                    """
                 }
+            }
         }
         stage('Download APK') {
             steps {
