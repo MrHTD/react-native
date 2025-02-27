@@ -102,7 +102,7 @@ pipeline {
                     sh """
                         ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
                         cd /home/ahmed/development/${REPO_NAME}/android/app/build/outputs/apk/release/;
-                        sudo cp ./app-release.apk /home/ahmed/apk/\$(date +"%Y-%m-%d");
+                        sudo cp ./app-release.apk /home/ahmed/apk/\$(date +"%Y-%m-%d")-$(basename ${APK_PATH};
                         ls -l;
                     """
                 }
@@ -111,7 +111,7 @@ pipeline {
         stage('Download APK') {
             steps {
                 script {
-                    def message = "APK Uploaded Successfully! 🎉\n\n📥 **Download APK:** [Click Here](http://${env.SSH_HOST}/${APK_NAME})"
+                    def message = "APK Uploaded Successfully! 🎉\n\n📥 **Download APK:** [Click Here](http://${env.SSH_HOST}/apk/)"
 
                     discordSend(
                         description: message,
