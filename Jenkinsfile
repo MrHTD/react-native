@@ -115,11 +115,7 @@ pipeline {
             steps {
                 script {
                     def apkURL = "http://${env.SSH_HOST}/apk/${APP_NAME}.apk"
-                    def message = """APK Uploaded Successfully! 🎉
-        
-                    📥 **[Download APK](${apkURL})**
-        
-                    ✅ The latest APK for *${APP_NAME}* is ready for download.
+                    def message = """APK Uploaded Successfully! 🎉 \n 📥 **[Download APK](${apkURL})** \n ✅ The latest APK for *${APP_NAME}* is ready for download.
                     """
         
                     discordSend(
