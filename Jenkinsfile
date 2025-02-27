@@ -95,6 +95,19 @@ pipeline {
         //         }
         //     }
         // }
+        stage("Copying APK") {
+        steps {
+                sshagent(['ssh']) {
+                    echo "Building APK..."
+                    sh """
+                        ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
+                        cd ${APK_PATH};
+                        sudo cp ${APK_PATH} /home/ahmed/apk/\$(date +"%Y-%m-%d");
+                        ls -l;
+                    """
+                }
+            }
+        }
         stage('Download APK') {
             steps {
                 script {
