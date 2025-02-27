@@ -103,7 +103,9 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no ${env.SSH_USER}@${env.SSH_HOST} << ENDSSH
                         cd /home/ahmed/development/${APP_NAME}/android/app/build/outputs/apk/release/;
                         ls -l;
-                        sudo cp ./app-release.apk /home/ahmed/apk/${env.DATE}_${APP_NAME}.apk;
+                        
+                        sudo cp ./app-release.apk /home/ahmed/apk/${APP_NAME}.apk;
+                        cd /home/ahmed/apk/
                         ls -l;
                     """
                 }
@@ -112,16 +114,22 @@ pipeline {
         stage('Download APK') {
             steps {
                 script {
-                    def message = "APK Uploaded Successfully! 🎉\n\n📥 **Download APK:** [Click Here](http://${env.SSH_HOST}/apk/)"
-
+                    def apkURL = "http://${env.SSH_HOST}/apk/${APP_NAME}.apk"
+                    def message = """APK Uploaded Successfully! 🎉
+        
+                    📥 **[Download APK](${apkURL})**
+        
+                    ✅ The latest APK for *${APP_NAME}* is ready for download.
+                    """
+        
                     discordSend(
                         description: message,
                         footer: 'Jenkins Pipeline Notification',
                         result: 'SUCCESS',
-                        title: "${REPO_NAME} APK Ready!",
+                        title: "${APP_NAME} APK Ready!",
                         webhookURL: env.DISCORD_WEBHOOK
                     )
-
+        
                     echo "Message sent to Discord: ${message}"
                 }
             }
